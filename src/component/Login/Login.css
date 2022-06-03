@@ -1,0 +1,123 @@
+/* custom styling */
+.mt-10{
+    margin-top: 10px;
+}
+
+.mt-50{
+    margin-top: 50px;
+}
+
+.required{
+    color: #e3452a;
+}
+
+.mb-20{
+    margin-bottom: 20px;
+}
+
+.modal-body .form-group{
+    color:#5b5a5a;
+    font-size: 20px;
+}
+
+.card-body{
+    box-shadow: #d7d7d7 0px 0px 7px 1px;
+    flex: unset;
+}
+
+.modal-header {
+    padding: 10px 10px;
+    border-bottom: 0px;
+}
+
+.modal-footer {
+    border-top: 1px solid #ececec;
+    display: unset;
+    font-size: 20px;
+}
+
+.modal-backdrop {
+    background: unset;
+}
+.modal-content{
+    padding: 10px;
+    box-shadow: #d7d7d7 0px 0px 7px 1px;
+}
+
+.btn-close{
+    color: #969696;
+    border-radius: 50%;
+    box-shadow: #c3c1c1 0px 0px 7px 1px;
+}
+
+.img-icon{
+    width: 50px;
+    height: 50px;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: #e5f8eb;
+}
+
+.modal-offers{    
+    padding: 10px;
+    color: #585757;
+    font-size: 22px;
+    width: 95%;
+}
+
+.modal-body{
+    border-top: #ececec 1px solid;
+}
+
+.note{
+    color: #a6a6a6;
+    font-size: 16px;
+}
+
+.btn-login{
+    background-color: #0f85ff;
+    color: #ffffff;
+    font-size: 25px;
+    border-radius: 15px;
+    padding: 16px 10px;
+}
+
+.already-text{
+    color: #585757;
+}
+
+.login-a{
+    color: #0f85ff;
+    text-decoration: none;
+}
+/* password styling */
+.password-sidebar div{
+    height: 4px !important;
+}
+
+.password-sidebar p{
+    display:none;
+}
+
+.bi{
+    color: #969696;
+}
+
+.btn-eye-icon {
+    border: 1px solid #ced4da;
+    border-left: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+#password {
+    border-right: 0px;
+}
+
+/* modal dialog */
+@media (min-width: 576px){
+    .modal-dialog {
+        max-width: 40%;
+        margin: 1.75rem auto;
+    }
+}
