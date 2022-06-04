@@ -194,8 +194,6 @@ function Login() {
                         type="checkbox"
                         name="subscribe"
                         ref={subscribeRef}
-                        // value={state.subscribe}
-                        // onChange={handleInputChange}
                       />{" "}
                       Subscribe to Newsletter
                     </label>
