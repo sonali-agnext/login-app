@@ -5,10 +5,15 @@ import PasswordStrengthBar from "react-password-strength-bar";
 import validator from "validator";
 
 function Login() {
+  const [userData, setState] = useState({
+    password: ''
+  });
+
   const [emailError, setEmailError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
-
+  const [dobError, setDobError] = useState(null);
   const [passwordType, setPasswordType] = useState("password");
+
   const emailRef = useRef();
   const passwordRef = useRef();
   const dobRef = useRef();
@@ -30,7 +35,9 @@ function Login() {
 
     const isEmailValid = validator.isEmail(email);
     const isPasswordValid = password.length >= 8;
+    const isDobValid = validator.isEmpty(dob);
 
+    setState({ password : password });
     if (!isEmailValid) {
       emailRef.current.focus();
       setEmailError("Please provide a valid email.");
@@ -44,6 +51,22 @@ function Login() {
     } else {
       setPasswordError(false);
     }
+
+    if (isDobValid) {
+      isEmailValid && isPasswordValid && dobRef.current.focus();
+        setDobError("Please choose DOB");      
+    } else {
+        setDobError(false);      
+    }
+
+    const output = {
+      'email': email,
+      'password': password,
+      'dob': dob,
+      'isSubscribed': isSubscribed
+    }
+    console.log('FormData', output);
+
   };
   //   change password type
   const changePasswordType = () => {
@@ -99,10 +122,6 @@ function Login() {
                 </p>
               </div>
               <div className="modal-body">
-                {/* print success and error message */}
-                {/* {successMsg && <p className="successMsg alert alert-success">{successMsg}</p>} */}
-                {/* {errorMsg && <p className="errorMsg  alert alert-danger">{errorMsg}</p>} */}
-                {/* form is initiated */}
                 <form onSubmit={handleOnSubmit} noValidate>
                   <div className="form-group mb-20">
                     <label htmlFor="email">
@@ -117,36 +136,46 @@ function Login() {
                       id="email"
                       placeholder="exampler@handler.com"
                       ref={emailRef}
+                      // onKeyUp={handleEmailInput}
+                      onBlur={handleOnSubmit}
                       // value={state.username}
                       autoComplete="off"
-                      // onChange={handleInputChange}
                     />
                     <small className={`${emailError && "invalid-feedback"} `}>
                       {!!emailError && emailError}
                     </small>
-                    <small className={`${!emailError && "valid-feedback"} `}>
+                    {/* <small className={`${!emailError && "valid-feedback"} `}>
                       {!emailError && "You're good to go"}
-                    </small>
+                    </small> */}
                   </div>
                   <div className="form-group mb-20">
                     <label htmlFor="password">
                       Create a Password <span className="required">*</span>
                     </label>
                     <div className="input-group mb-20">
+                    <small className={`${passwordError && "invalid-feedback"} `}>
+                    {!!passwordError && passwordError}
+                    </small>                  
                       <input
                         type={passwordType}
-                        className="form-control"
+                        className={`form-control ${passwordError && "is-invalid"} ${
+                          passwordError === false && "is-valid"
+                        }`}
                         name="password"
                         id="password"
                         placeholder="at least 8 characters"
                         ref={passwordRef}
                         // value={state.password}
                         autoComplete="off"
+                        // onKeyUp={handlePasswordInput}
+                        onBlur={handleOnSubmit}
                         // onChange={handleInputChange}
                       />
                       <div className="input-group-append">
                         <button
-                          className="btn btn-eye-icon"
+                          className={`btn btn-eye-icon ${passwordError && "is-invalid"} ${
+                            passwordError === false && "is-valid"
+                          }`}
                           type="button"
                           onClick={changePasswordType}
                         >
@@ -158,15 +187,21 @@ function Login() {
                         </button>
                       </div>
                     </div>
+                    
+                    {/* <small className={`${!passwordError && "valid-feedback"} `}>
+                      {!passwordError && "You're good to go"}
+                    </small> */}
                     <PasswordStrengthBar
                       className="password-sidebar mt-10"
-                      // password={state.password}
+                      password={userData.password} 
                       minLength={8}
                       onChangeScore={(score, feedback) => {
                         console.log(score, feedback);
                       }}
                     />
-                    <small>{!!passwordError && passwordError}</small>
+                    <small className={`${passwordError && "invalid-feedback"} `}>
+                    {!!passwordError && passwordError}
+                    </small>
                   </div>
                   <div className="form-group mb-20">
                     <label htmlFor="dob">
@@ -174,18 +209,23 @@ function Login() {
                     </label>
                     <input
                       type="text"
+                      className={`form-control ${dobError && "is-invalid"} ${
+                        dobError === false && "is-valid"
+                      }`}
                       onFocus={(e) => (e.target.type = "date")}
-                      onBlur={(e) => (e.target.type = "text")}
-                      className="form-control"
+                      onBlur={(e) => (e.target.type = "text" )}
                       name="dob"
                       id="dob"
                       placeholder="MM/DD/YYYY"
                       ref={dobRef}
                       max={new Date().toISOString().slice(0, 10)}
-                      // value={state.dob}
                       autoComplete="off"
-                      // onChange={handleInputChange}
+                      onBlur={handleOnSubmit}
+                      // onKeyUp={handleDobInput}
                     />
+                    <small className={`${dobError && "invalid-feedback"} `}>
+                      {!!dobError && dobError}
+                    </small>
                   </div>
                   <p className="note">
                     We want to give you a special treat on your Birthday
