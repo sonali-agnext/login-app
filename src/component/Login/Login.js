@@ -33,32 +33,6 @@ function Login() {
     const dob = dobRef.current.value;
     const isSubscribed = subscribeRef.current.checked;
 
-    const isEmailValid = validator.isEmail(email);
-    const isPasswordValid = password.length >= 8;
-    const isDobValid = validator.isEmpty(dob);
-
-    setState({ password : password });
-    if (!isEmailValid) {
-      emailRef.current.focus();
-      setEmailError("Please provide a valid email.");
-    } else {
-      setEmailError(false);
-    }
-
-    if (!isPasswordValid) {
-      isEmailValid && passwordRef.current.focus();
-      setPasswordError("Password should be more than 8 characters.");
-    } else {
-      setPasswordError(false);
-    }
-
-    if (isDobValid) {
-      isEmailValid && isPasswordValid && dobRef.current.focus();
-        setDobError("Please choose DOB");      
-    } else {
-        setDobError(false);      
-    }
-
     const output = {
       'email': email,
       'password': password,
@@ -68,6 +42,44 @@ function Login() {
     console.log('FormData', output);
 
   };
+
+  const handleOnValidateInput = (event) => {
+  
+    
+      if(event.target.name === 'email'){ 
+        const email = emailRef.current.value; 
+        const isEmailValid = validator.isEmail(email);    
+        if (!isEmailValid) {
+          emailRef.current.focus();
+          setEmailError("Please provide a valid email.");
+        } else {
+          setEmailError(false);
+        }
+      }
+
+      if(event.target.name === 'password'){
+        const password = passwordRef.current.value;
+        setState({ password : password });
+        const isPasswordValid = password.length >= 8;
+        if (!isPasswordValid) {
+          passwordRef.current.focus();
+          setPasswordError("Password should be more than 8 characters.");
+        } else {
+          setPasswordError(false);
+        }
+      }
+
+      if(event.target.name === 'dob'){
+        const dob = dobRef.current.value;
+        const isDobValid = validator.isEmpty(dob);
+        if (isDobValid) {
+            dobRef.current.focus();
+            setDobError("Please choose DOB");      
+        } else {
+            setDobError(false);      
+        }
+      }
+  }
   //   change password type
   const changePasswordType = () => {
     if (passwordType === "password") {
@@ -137,7 +149,7 @@ function Login() {
                       placeholder="exampler@handler.com"
                       ref={emailRef}
                       // onKeyUp={handleEmailInput}
-                      onBlur={handleOnSubmit}
+                      onChange={handleOnValidateInput}
                       // value={state.username}
                       autoComplete="off"
                     />
@@ -168,7 +180,7 @@ function Login() {
                         // value={state.password}
                         autoComplete="off"
                         // onKeyUp={handlePasswordInput}
-                        onBlur={handleOnSubmit}
+                        onChange={handleOnValidateInput}
                         // onChange={handleInputChange}
                       />
                       <div className="input-group-append">
@@ -213,14 +225,13 @@ function Login() {
                         dobError === false && "is-valid"
                       }`}
                       onFocus={(e) => (e.target.type = "date")}
-                      onBlur={(e) => (e.target.type = "text" )}
+                      onChange={handleOnValidateInput}
                       name="dob"
                       id="dob"
                       placeholder="MM/DD/YYYY"
                       ref={dobRef}
                       max={new Date().toISOString().slice(0, 10)}
                       autoComplete="off"
-                      onBlur={handleOnSubmit}
                       // onKeyUp={handleDobInput}
                     />
                     <small className={`${dobError && "invalid-feedback"} `}>
