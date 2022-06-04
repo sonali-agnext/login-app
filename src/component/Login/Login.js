@@ -32,12 +32,14 @@ function Login() {
     const isPasswordValid = password.length >= 8;
 
     if (!isEmailValid) {
+      emailRef.current.focus();
       setEmailError("Please provide a valid email.");
     } else {
       setEmailError(false);
     }
 
     if (!isPasswordValid) {
+      isEmailValid && passwordRef.current.focus();
       setPasswordError("Password should be more than 8 characters.");
     } else {
       setPasswordError(false);
