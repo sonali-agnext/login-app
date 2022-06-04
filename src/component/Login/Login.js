@@ -5,47 +5,101 @@ import PasswordStrengthBar from "react-password-strength-bar";
 import validator from "validator";
 
 function Login() {
-  const [emailError, setEmailError] = useState(null);
-  const [passwordError, setPasswordError] = useState(null);
-
-  const [passwordType, setPasswordType] = useState("password");
   const emailRef = useRef();
   const passwordRef = useRef();
   const dobRef = useRef();
   const subscribeRef = useRef();
 
-  // by default email is focused
-  useEffect(() => {
-    emailRef.current.focus();
-  }, []);
+  const [emailError, setEmailError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
+  const [dobError, setDobError] = useState(null);
+  const [password, setPassword] = useState("");
+  const [passwordType, setPasswordType] = useState("password");
+  const [submitCount, setSubmitCount] = useState(1);
+  const [eventType, setEventType] = useState();
 
-  //   on submit it will validate the inputs
+  useEffect(() => {
+    if (eventType === "submit") {
+      if (emailError) {
+        emailRef.current.focus();
+        return;
+      } else if (passwordError) {
+        passwordRef.current.focus();
+        return;
+      } else if (dobError) {
+        dobRef.current.focus();
+        return;
+      }
+    }
+  }, [emailError, passwordError, submitCount]);
+
+  const validateEmail = (email, eventType) => {
+    setEventType(eventType);
+    const isEmailValid = validator.isEmail(email);
+
+    if (!isEmailValid) {
+      setEmailError("Please provide a valid email.");
+      return false;
+    } else {
+      setEmailError(false);
+      return true;
+    }
+  };
+
+  const validatePassword = (password, eventType) => {
+    setEventType(eventType);
+    setPassword(password);
+    const isPasswordValid = password.length >= 8;
+
+    if (!isPasswordValid) {
+      setPasswordError("Password should be more than 8 characters.");
+      return false;
+    } else {
+      setPasswordError(false);
+      return true;
+    }
+  };
+
+  const validateDob = (dob, eventType) => {
+    setEventType(eventType);
+    const isDobValid = !validator.isEmpty(dob);
+
+    if (!isDobValid) {
+      setDobError("Date of birth cannot be empty.");
+      return false;
+    } else {
+      setDobError(false);
+      return true;
+    }
+  };
+
   const handleOnSubmit = (event) => {
     event.preventDefault();
+    setSubmitCount((state) => state + 1);
 
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     const dob = dobRef.current.value;
     const isSubscribed = subscribeRef.current.checked;
 
-    const isEmailValid = validator.isEmail(email);
-    const isPasswordValid = password.length >= 8;
+    const isEmailValid = validateEmail(email, event.type);
+    const isPasswordValid = validatePassword(password, event.type);
+    const isDobValid = validateDob(dob, event.type);
 
-    if (!isEmailValid) {
-      emailRef.current.focus();
-      setEmailError("Please provide a valid email.");
-    } else {
-      setEmailError(false);
-    }
+    if ((isEmailValid, isPasswordValid, isDobValid)) {
+      console.log({ email, password, dob, isSubscribed });
 
-    if (!isPasswordValid) {
-      isEmailValid && passwordRef.current.focus();
-      setPasswordError("Password should be more than 8 characters.");
-    } else {
-      setPasswordError(false);
+      emailRef.current.value = "";
+      passwordRef.current.value = "";
+      dobRef.current.value = "";
+      subscribeRef.current.checked = false;
+
+      setEmailError(null);
+      setPasswordError(null);
+      setDobError(null);
+      setPassword('')
     }
   };
-  //   change password type
   const changePasswordType = () => {
     if (passwordType === "password") {
       setPasswordType("text");
@@ -68,7 +122,6 @@ function Login() {
             Login Here
           </button>
         </div>
-        {/* <!-- Modal --> */}
         <div
           className="modal fade"
           id="exampleModal"
@@ -99,10 +152,6 @@ function Login() {
                 </p>
               </div>
               <div className="modal-body">
-                {/* print success and error message */}
-                {/* {successMsg && <p className="successMsg alert alert-success">{successMsg}</p>} */}
-                {/* {errorMsg && <p className="errorMsg  alert alert-danger">{errorMsg}</p>} */}
-                {/* form is initiated */}
                 <form onSubmit={handleOnSubmit} noValidate>
                   <div className="form-group mb-20">
                     <label htmlFor="email">
@@ -117,9 +166,9 @@ function Login() {
                       id="email"
                       placeholder="exampler@handler.com"
                       ref={emailRef}
-                      // value={state.username}
                       autoComplete="off"
-                      // onChange={handleInputChange}
+                      onBlur={(e) => validateEmail(e.target.value, e.type)}
+                      onChange={(e) => validateEmail(e.target.value, e.type)}
                     />
                     <small className={`${emailError && "invalid-feedback"} `}>
                       {!!emailError && emailError}
@@ -135,14 +184,18 @@ function Login() {
                     <div className="input-group mb-20">
                       <input
                         type={passwordType}
-                        className="form-control"
+                        className={`form-control ${
+                          passwordError && "is-invalid"
+                        } ${passwordError === false && "is-valid"}`}
                         name="password"
                         id="password"
                         placeholder="at least 8 characters"
                         ref={passwordRef}
-                        // value={state.password}
                         autoComplete="off"
-                        // onChange={handleInputChange}
+                        onBlur={(e) => validatePassword(e.target.value, e.type)}
+                        onChange={(e) =>
+                          validatePassword(e.target.value, e.type)
+                        }
                       />
                       <div className="input-group-append">
                         <button
@@ -157,16 +210,23 @@ function Login() {
                           )}
                         </button>
                       </div>
+                      <small
+                        className={`${passwordError && "invalid-feedback"} `}
+                      >
+                        {!!passwordError && passwordError}
+                      </small>
+                      <small
+                        className={`${!passwordError && "valid-feedback"} `}
+                      >
+                        {!passwordError && "You're good to go"}
+                      </small>
                     </div>
+
                     <PasswordStrengthBar
                       className="password-sidebar mt-10"
-                      // password={state.password}
                       minLength={8}
-                      onChangeScore={(score, feedback) => {
-                        console.log(score, feedback);
-                      }}
+                      password={password}
                     />
-                    <small>{!!passwordError && passwordError}</small>
                   </div>
                   <div className="form-group mb-20">
                     <label htmlFor="dob">
@@ -175,17 +235,27 @@ function Login() {
                     <input
                       type="text"
                       onFocus={(e) => (e.target.type = "date")}
-                      onBlur={(e) => (e.target.type = "text")}
-                      className="form-control"
+                      onBlur={(e) =>
+                        (e.target.type =
+                          "text" && validateDob(e.target.value, e.type))
+                      }
+                      className={`form-control ${dobError && "is-invalid"} ${
+                        dobError === false && "is-valid"
+                      }`}
                       name="dob"
                       id="dob"
                       placeholder="MM/DD/YYYY"
                       ref={dobRef}
                       max={new Date().toISOString().slice(0, 10)}
-                      // value={state.dob}
                       autoComplete="off"
-                      // onChange={handleInputChange}
+                      onChange={(e) => validateDob(e.target.value, e.type)}
                     />
+                    <small className={`${!!dobError && "invalid-feedback"} `}>
+                      {!!dobError && dobError}
+                    </small>
+                    <small className={`${!dobError && "valid-feedback"} `}>
+                      {!dobError && "You're good to go"}
+                    </small>
                   </div>
                   <p className="note">
                     We want to give you a special treat on your Birthday
@@ -196,9 +266,7 @@ function Login() {
                         type="checkbox"
                         name="subscribe"
                         ref={subscribeRef}
-                        // value={state.subscribe}
-                        // onChange={handleInputChange}
-                      />{" "}
+                      />
                       Subscribe to Newsletter
                     </label>
                   </div>
@@ -214,7 +282,7 @@ function Login() {
               </div>
               <div className="modal-footer text-center">
                 <p>
-                  <span className="already-text">Already have an account?</span>{" "}
+                  <span className="already-text">Already have an account?</span>
                   <a className="login-a" href={url}>
                     Log in
                   </a>
