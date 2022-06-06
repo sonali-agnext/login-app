@@ -27,24 +27,66 @@ function Login() {
   //   on submit it will validate the inputs
   const handleOnSubmit = (event) => {
     event.preventDefault();
-
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     const dob = dobRef.current.value;
     const isSubscribed = subscribeRef.current.checked;
+    const isInvalid = handleOnValidateInput(event);
 
-    const output = {
-      'email': email,
-      'password': password,
-      'dob': dob,
-      'isSubscribed': isSubscribed
-    }
-    console.log('FormData', output);
+    if (isInvalid) {      
+      console.log('Not valid');      
+    } else {
+      const output = {
+        'email': email,
+        'password': password,
+        'dob': dob,
+        'isSubscribed': isSubscribed
+      }
+      console.log('FormData', output);
+    }   
 
   };
 
-  const handleOnValidateInput = (event) => {
-  
+  const handleOnValidateInput = (event) => {  
+    event.preventDefault();
+
+      const email = emailRef.current.value; 
+      const isEmailValid = validator.isEmail(email);    
+      if (!isEmailValid) {
+        emailRef.current.focus();
+        setEmailError("Please provide a valid email.");
+      } else {
+        setEmailError(false);
+      }
+
+      const password = passwordRef.current.value;
+      setState({ password : password });
+      const isPasswordValid = password.length >= 8;
+      if (!isPasswordValid) {
+        passwordRef.current.focus();
+        setPasswordError("Password should be more than 8 characters.");
+      } else {
+        setPasswordError(false);
+      }
+
+      const dob = dobRef.current.value;
+      const isDobValid = validator.isEmpty(dob);
+      if (isDobValid) {
+          dobRef.current.focus();
+          setDobError("Please choose DOB");      
+      } else {
+          setDobError(false);      
+      }
+      
+      if(dobError === false && passwordError === false && emailError === false){
+        return false;
+      }else{
+        return true;
+      }
+  }
+
+  const handleOnValidateEmailInput = (event) => {  
+    event.preventDefault();
     
       if(event.target.name === 'email'){ 
         const email = emailRef.current.value; 
@@ -56,7 +98,10 @@ function Login() {
           setEmailError(false);
         }
       }
+  }
 
+  const handleOnValidatePassowrdInput = (event) => {  
+    event.preventDefault();
       if(event.target.name === 'password'){
         const password = passwordRef.current.value;
         setState({ password : password });
@@ -68,6 +113,10 @@ function Login() {
           setPasswordError(false);
         }
       }
+  }
+
+  const handleOnValidateDobInput = (event) => {  
+    event.preventDefault();
 
       if(event.target.name === 'dob'){
         const dob = dobRef.current.value;
@@ -149,7 +198,7 @@ function Login() {
                       placeholder="exampler@handler.com"
                       ref={emailRef}
                       // onKeyUp={handleEmailInput}
-                      onChange={handleOnValidateInput}
+                      onChange={handleOnValidateEmailInput}
                       // value={state.username}
                       autoComplete="off"
                     />
@@ -165,9 +214,9 @@ function Login() {
                       Create a Password <span className="required">*</span>
                     </label>
                     <div className="input-group mb-20">
-                    <small className={`${passwordError && "invalid-feedback"} `}>
+                    {/* <small className={`${passwordError && "invalid-feedback"} `}>
                     {!!passwordError && passwordError}
-                    </small>                  
+                    </small>                   */}
                       <input
                         type={passwordType}
                         className={`form-control ${passwordError && "is-invalid"} ${
@@ -180,7 +229,7 @@ function Login() {
                         // value={state.password}
                         autoComplete="off"
                         // onKeyUp={handlePasswordInput}
-                        onChange={handleOnValidateInput}
+                        onChange={handleOnValidatePassowrdInput}
                         // onChange={handleInputChange}
                       />
                       <div className="input-group-append">
@@ -210,10 +259,10 @@ function Login() {
                       onChangeScore={(score, feedback) => {
                         console.log(score, feedback);
                       }}
-                    />
+                    /> 
                     <small className={`${passwordError && "invalid-feedback"} `}>
                     {!!passwordError && passwordError}
-                    </small>
+                    </small>                  
                   </div>
                   <div className="form-group mb-20">
                     <label htmlFor="dob">
@@ -225,7 +274,7 @@ function Login() {
                         dobError === false && "is-valid"
                       }`}
                       onFocus={(e) => (e.target.type = "date")}
-                      onChange={handleOnValidateInput}
+                      onChange={handleOnValidateDobInput}
                       name="dob"
                       id="dob"
                       placeholder="MM/DD/YYYY"
