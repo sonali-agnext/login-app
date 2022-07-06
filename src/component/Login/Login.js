@@ -17,6 +17,17 @@ function Login() {
   const [passwordType, setPasswordType] = useState("password");
   const [submitCount, setSubmitCount] = useState(1);
   const [eventType, setEventType] = useState();
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const [emailTouched, setEmailTouched] = useState(null);
+  const [passwordTouched, setPasswordTouched] = useState(null);
+  const [dobTouched, setDobTouched] = useState(null);
+
+  const invalidEmail =
+    (emailError && emailTouched) || (emailError && isSubmitted);
+  const invalidPassword =
+    (passwordError && passwordTouched) || (passwordError && isSubmitted);
+  const invalidDob = (dobError && dobTouched) || (dobError && isSubmitted);
 
   useEffect(() => {
     if (eventType === "submit") {
@@ -31,7 +42,7 @@ function Login() {
         return;
       }
     }
-  }, [emailError, passwordError, submitCount]);
+  }, [emailError, passwordError, submitCount, eventType, dobError]);
 
   const validateEmail = (email, eventType) => {
     setEventType(eventType);
@@ -74,6 +85,7 @@ function Login() {
   };
 
   const handleOnSubmit = (event) => {
+    setIsSubmitted(true);
     event.preventDefault();
     setSubmitCount((state) => state + 1);
 
@@ -97,7 +109,7 @@ function Login() {
       setEmailError(null);
       setPasswordError(null);
       setDobError(null);
-      setPassword('')
+      setPassword("");
     }
   };
   const changePasswordType = () => {
@@ -159,22 +171,25 @@ function Login() {
                     </label>
                     <input
                       type="email"
-                      className={`form-control ${emailError && "is-invalid"} ${
-                        emailError === false && "is-valid"
-                      }`}
+                      className={`form-control ${
+                        invalidEmail && "is-invalid"
+                      } ${emailError === false && "is-valid"}`}
                       name="email"
                       id="email"
                       placeholder="exampler@handler.com"
                       ref={emailRef}
                       autoComplete="off"
-                      onBlur={(e) => validateEmail(e.target.value, e.type)}
+                      onBlur={(e) => {
+                        setEmailTouched(true);
+                        validateEmail(e.target.value, e.type);
+                      }}
                       onChange={(e) => validateEmail(e.target.value, e.type)}
                     />
-                    <small className={`${emailError && "invalid-feedback"} `}>
-                      {!!emailError && emailError}
+                    <small className={`${invalidEmail && "invalid-feedback"} `}>
+                      {!!invalidEmail && emailError}
                     </small>
-                    <small className={`${!emailError && "valid-feedback"} `}>
-                      {!emailError && "You're good to go"}
+                    <small className={`${!invalidEmail && "valid-feedback"} `}>
+                      {!invalidEmail && "You're good to go"}
                     </small>
                   </div>
                   <div className="form-group mb-20">
@@ -185,14 +200,17 @@ function Login() {
                       <input
                         type={passwordType}
                         className={`form-control ${
-                          passwordError && "is-invalid"
+                          invalidPassword && "is-invalid"
                         } ${passwordError === false && "is-valid"}`}
                         name="password"
                         id="password"
                         placeholder="at least 8 characters"
                         ref={passwordRef}
                         autoComplete="off"
-                        onBlur={(e) => validatePassword(e.target.value, e.type)}
+                        onBlur={(e) => {
+                          setPasswordTouched(true);
+                          validatePassword(e.target.value, e.type);
+                        }}
                         onChange={(e) =>
                           validatePassword(e.target.value, e.type)
                         }
@@ -211,14 +229,14 @@ function Login() {
                         </button>
                       </div>
                       <small
-                        className={`${passwordError && "invalid-feedback"} `}
+                        className={`${invalidPassword && "invalid-feedback"} `}
                       >
-                        {!!passwordError && passwordError}
+                        {!!invalidPassword && passwordError}
                       </small>
                       <small
-                        className={`${!passwordError && "valid-feedback"} `}
+                        className={`${!invalidPassword && "valid-feedback"} `}
                       >
-                        {!passwordError && "You're good to go"}
+                        {!invalidPassword && "You're good to go"}
                       </small>
                     </div>
 
@@ -235,11 +253,12 @@ function Login() {
                     <input
                       type="text"
                       onFocus={(e) => (e.target.type = "date")}
-                      onBlur={(e) =>
-                        (e.target.type =
-                          "text" && validateDob(e.target.value, e.type))
-                      }
-                      className={`form-control ${dobError && "is-invalid"} ${
+                      onBlur={(e) => {
+                        setDobTouched(true);
+                        e.target.type = "text";
+                        validateDob(e.target.value, e.type);
+                      }}
+                      className={`form-control ${invalidDob && "is-invalid"} ${
                         dobError === false && "is-valid"
                       }`}
                       name="dob"
@@ -250,11 +269,11 @@ function Login() {
                       autoComplete="off"
                       onChange={(e) => validateDob(e.target.value, e.type)}
                     />
-                    <small className={`${!!dobError && "invalid-feedback"} `}>
-                      {!!dobError && dobError}
+                    <small className={`${!!invalidDob && "invalid-feedback"} `}>
+                      {!!invalidDob && dobError}
                     </small>
                     <small className={`${!dobError && "valid-feedback"} `}>
-                      {!dobError && "You're good to go"}
+                      {!invalidDob && "You're good to go"}
                     </small>
                   </div>
                   <p className="note">
