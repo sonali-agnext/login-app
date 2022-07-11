@@ -1,0 +1,149 @@
+/* custom styling */
+.mt-10{
+    margin-top: 10px;
+}
+
+.mt-50{
+    margin-top: 50px;
+}
+
+.required{
+    color: #e3452a;
+}
+
+.mb-20{
+    margin-bottom: 20px;
+}
+
+.modal-body .form-group{
+    color:#5b5a5a;
+    font-size: 20px;
+}
+
+.card-body{
+    box-shadow: #d7d7d7 0px 0px 7px 1px;
+    flex: unset;
+}
+
+.modal-header {
+    padding: 10px 10px;
+    border-bottom: 0px;
+}
+
+.modal-footer {
+    border-top: 1px solid #ececec;
+    display: unset;
+    font-size: 20px;
+}
+
+.modal-backdrop {
+    background: unset;
+}
+.modal-content{
+    padding: 10px;
+    box-shadow: #d7d7d7 0px 0px 7px 1px;
+}
+
+.btn-close{
+    color: #969696;
+    border-radius: 50%;
+    box-shadow: #c3c1c1 0px 0px 7px 1px;
+}
+
+.img-icon{
+    width: 50px;
+    height: 50px;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: #e5f8eb;
+}
+
+.modal-offers{    
+    padding: 10px;
+    color: #585757;
+    font-size: 22px;
+    width: 95%;
+}
+
+.modal-body{
+    border-top: #ececec 1px solid;
+}
+
+.note{
+    color: #a6a6a6;
+    font-size: 16px;
+}
+
+.btn-login{
+    background-color: #0f85ff;
+    color: #ffffff;
+    font-size: 25px;
+    border-radius: 15px;
+    padding: 16px 10px;
+}
+
+.already-text{
+    color: #585757;
+}
+
+.login-a{
+    color: #0f85ff;
+    text-decoration: none;
+}
+/* password styling */
+.password-sidebar div{
+    height: 4px !important;
+}
+
+.password-sidebar p{
+    display:none;
+}
+
+.bi{
+    color: #969696;
+}
+
+.btn-eye-icon {
+    border: 1px solid #ced4da;
+    border-left: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.btn-eye-icon.is-invalid{
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 12 12%27 width=%2712%27 height=%2712%27 fill=%27none%27 stroke=%27%23dc3545%27%3e%3ccircle cx=%276%27 cy=%276%27 r=%274.5%27/%3e%3cpath stroke-linejoin=%27round%27 d=%27M5.8 3.6h.4L6 6.5z%27/%3e%3ccircle cx=%276%27 cy=%278.2%27 r=%27.6%27 fill=%27%23dc3545%27 stroke=%27none%27/%3e%3c/svg%3e');
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.btn-eye-icon.is-valid, .was-validated .form-control:valid {
+    border-color: #198754;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 8 8%27%3e%3cpath fill=%27%23198754%27 d=%27M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z%27/%3e%3c/svg%3e');
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+#password {
+    border-right: 0px;
+}
+
+#password.form-control.is-invalid{
+    background-image: none;
+}
+
+#password.form-control.is-valid{
+    background-image: none;
+}
+
+/* modal dialog */
+@media (min-width: 576px){
+    .modal-dialog {
+        max-width: 40%;
+        margin: 1.75rem auto;
+    }
+}
