@@ -5,6 +5,26 @@ import "./Auth2.css";
 import icon from "../../assets/icons/assignment_turned_in_FILL1.svg";
 import PasswordStrengthBar from "react-password-strength-bar";
 
+const initialValues = {
+  email: "",
+  password: "",
+  dob: "",
+  subscribe: false,
+};
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email("Email is invalid").required("Email is required"),
+  password: Yup.string()
+    .min(8, "Password must be at least 8 characters")
+    .required("Password is required"),
+  dob: Yup.date().max(new Date()).required("DOB is required"),
+  subscribe: Yup.boolean(),
+});
+
+const onSubmit = (fields) => {
+  alert("SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4));
+};
+
 function Auth2() {
   const [passwordType, setPasswordType] = useState("password");
   let url = "";
@@ -16,35 +36,13 @@ function Auth2() {
     }
     setPasswordType("password");
   };
+
   return (
     <Formik
-      initialValues={{
-        email: "",
-        password: "",
-        dob: "",
-        subscribe: false,
-      }}
-      validationSchema={Yup.object().shape({
-        email: Yup.string()
-          .email("Email is invalid")
-          .required("Email is required"),
-        password: Yup.string()
-          .min(8, "Password must be at least 8 characters")
-          .required("Password is required"),
-        dob: Yup.date().max(new Date()).required("DOB is required"),
-        subscribe: Yup.boolean(),
-      })}
-      onSubmit={(fields) => {
-        alert("SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4));
-      }}
-      render={({
-        errors,
-        status,
-        touched,
-        handleChange,
-        values,
-        handleBlur,
-      }) => (
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={onSubmit}
+      render={({ errors, touched, values }) => (
         <div className="container">
           <div className="row">
             <div className="col-md-4 offset-md-4 bg-white mt-50 card-body">
@@ -73,7 +71,7 @@ function Auth2() {
                         className="img-icon"
                         alt="clipboard-icon"
                         src={icon}
-                      />{" "}
+                      />
                       Sign up
                     </h3>
                     <button
@@ -99,15 +97,13 @@ function Auth2() {
                       </label>
                       <Field
                         name="email"
-                        value={values.email}
-                        type="text"
+                        type="email"
+                        id="email"
                         className={
                           "form-control" +
                           (errors.email && touched.email ? " is-invalid" : "") +
                           (!errors.email && touched.email ? " is-valid" : "")
                         }
-                        onChange={(e) => handleChange(e)}
-                        onBlur={(e) => handleBlur(e)}
                       />
                       <ErrorMessage
                         name="email"
@@ -122,10 +118,9 @@ function Auth2() {
                       <div className="input-group mb-20">
                         <Field
                           name="password"
+                          type={passwordType}
                           id="password"
                           placeholder="at least 8 characters"
-                          type={passwordType}
-                          onChange={(e) => handleChange(e)}
                           className={
                             "form-control" +
                             (errors.password && touched.password
@@ -158,6 +153,11 @@ function Auth2() {
                             )}
                           </button>
                         </div>
+                        <ErrorMessage
+                          name="password"
+                          component="div"
+                          className="invalid-feedback"
+                        />
                       </div>
                       <PasswordStrengthBar
                         className="password-sidebar mt-10"
@@ -167,26 +167,21 @@ function Auth2() {
                           console.log(score, feedback);
                         }}
                       />
-                      <ErrorMessage
-                        name="password"
-                        component="div"
-                        className="invalid-feedback"
-                      />
                     </div>
                     <div className="form-group mb-20">
                       <label htmlFor="dob">
                         Date of birth <span className="required">*</span>
                       </label>
                       <Field
+                        name="dob"
                         type="text"
+                        id="dob"
                         className={
                           "form-control" +
                           (errors.dob && touched.dob ? " is-invalid" : "") +
                           (!errors.dob && touched.dob ? " is-valid" : "")
                         }
                         onFocus={(e) => (e.target.type = "date")}
-                        name="dob"
-                        id="dob"
                         placeholder="MM/DD/YYYY"
                         autoComplete="off"
                       />
@@ -201,7 +196,11 @@ function Auth2() {
                     </p>
                     <div className="form-group mb-20">
                       <label htmlFor="subscribe">
-                        <Field type="checkbox" name="subscribe" />
+                        <Field
+                          id="subscribe"
+                          type="checkbox"
+                          name="subscribe"
+                        />
                         Subscribe to Newsletter
                       </label>
                     </div>
@@ -219,7 +218,7 @@ function Auth2() {
                   <p>
                     <span className="already-text">
                       Already have an account?
-                    </span>{" "}
+                    </span>
                     <a className="login-a" href={url}>
                       Log in
                     </a>
